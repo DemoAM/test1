@@ -1,22 +1,8 @@
 from django.contrib import admin
-from .models import *
+from User.models import User
+from User import models
+admin.site.register(User)
+admin.site.register(models.Book)
+admin.site.register(models.Category)
+admin.site.register(models.Author)
 
-# Register your models here.
-
-
-@admin.register(User)
-class UserAdmin(admin.ModelAdmin):
-    list_display = [
-        "id",
-        "username",
-    ]
-
-
-@admin.register(Student)
-class StudentAdmin(admin.ModelAdmin):
-    list_display = ["id"]
-
-
-@admin.register(StudentProfile)
-class StuProfile(admin.ModelAdmin):
-    list_display = ["id"]

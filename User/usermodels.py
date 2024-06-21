@@ -1,5 +1,3 @@
-import uuid
-
 from django.db import models
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.db.models.signals import post_save
@@ -10,16 +8,16 @@ class User(AbstractUser):
     email = models.EmailField(unique=True)
     ROLE_CHOICES = (
         ("A", "Admin"),
-        ("AU", "Author"),
+        ("A", "Auhtor"),
         ("B", "Buyer"),
     )
-    role = models.CharField(max_length=50, choices=ROLE_CHOICES, default="B")
+    role = models.CharField(max_length=50, choices=ROLE_CHOICES, default="T")
 
 
 class StudentManager(BaseUserManager):
     def get_queryset(self, *args, **kwargs):
-        results = super().get_queryset(*args, **kwargs)
-        return results.filter(role="S")
+        rseults = super().get_queryset(*args, **kwargs)
+        return rseults.filter(ROLE_CHOICES="S")
 
 
 class Buyer(User):
@@ -28,7 +26,7 @@ class Buyer(User):
     def __str__(self):
         return self.name
 
-    objects = StudentManager()
+    student = StudentManager
 
 
 class BuyerProfile(models.Model):
@@ -38,46 +36,20 @@ class BuyerProfile(models.Model):
 
 class AuthorManager(BaseUserManager):
     def get_queryset(self, *args, **kwargs):
-        results = super().get_queryset(*args, **kwargs)
-        return results.filter(role="AU")
+        rseults = super().get_queryset(*args, **kwargs)
+        return rseults.filter(ROLE_CHOICES="A")
 
 
-class AuthorUser(User):
+class Auhtor(User):
     name = models.CharField(max_length=50)
     degree = models.CharField(max_length=20)
 
     def __str__(self):
         return self.name
 
-    objects = AuthorManager()
+    teacher = AuthorManager
 
 
 class AuthorProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     id = models.AutoField(primary_key=True)
-
-
-class Author(models.Model):
-    name = models.CharField(max_length=50)
-
-    def __str__(self):
-        return self.name
-
-
-class Category(models.Model):
-    id =models.AutoField(primary_key=True)
-    name = models.CharField(max_length=50)
-
-    def __str__(self):
-        return self.name
-
-
-class Book(models.Model):
-    title = models.CharField(max_length=200)
-    author = models.ForeignKey(Author,on_delete=models.CASCADE)
-    categories = models.ManyToManyField(Category, related_name='books')
-
-    def __str__(self):
-        return self.title
-
-
