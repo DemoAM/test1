@@ -16,10 +16,10 @@ class Category(models.Model):
 
 
 class Book(models.Model):
-    title = models.CharField(max_length=50, unique=True)
+    title = models.CharField(max_length=50)
     categories = models.ManyToManyField(Category)
     author = models.ForeignKey(Author, on_delete=models.CASCADE)
-    price = models.DecimalField(max_digits=6,decimal_places=2)
+    price = models.DecimalField(max_digits=6, decimal_places=2)
 
     def __str__(self):
         return f"Book is {self.title} Author is {self.author} "
@@ -28,7 +28,7 @@ class Book(models.Model):
 class Cart(models.Model):
     book = models.ForeignKey(Book, on_delete=models.CASCADE)
     quantity = models.IntegerField(default=1)
-    price = models.IntegerField(null=True,blank=True)
+    price = models.IntegerField(null=True, blank=True)
 
     def save(self, *args, **kwargs):
         self.price = self.book.price * self.quantity
